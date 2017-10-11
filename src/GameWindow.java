@@ -1,10 +1,13 @@
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 
 public class GameWindow extends JFrame {
     GameCanvas canvas;
+    long lastTimeUpdate;
 
     public GameWindow(){
         this.setSize(800,600);
@@ -51,8 +54,38 @@ public class GameWindow extends JFrame {
             }
         });
         this.setResizable(false);
+        this.addKeyListener(new KeyListener() {
+            @Override
+            public void keyTyped(KeyEvent e) {
+            }
+
+            @Override
+            public void keyPressed(KeyEvent e) {
+                canvas.keyPressed(e);
+            }
+
+            @Override
+            public void keyReleased(KeyEvent e) {
+                canvas.keyReleased(e);
+            }
+        });
+
+
+
         this.canvas.setVisible(true);
         this.setVisible(true);
+        lastTimeUpdate = System.nanoTime();
+    }
+    public void gameLoop(){
+        while (true){
+            long curentTime = System.nanoTime();
+            if (curentTime - lastTimeUpdate >= 17000000) {
+                canvas.render();
+                repaint();
+                lastTimeUpdate = curentTime;
+            }
+
+        }
     }
 
 }
